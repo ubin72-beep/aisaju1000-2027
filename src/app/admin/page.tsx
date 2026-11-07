@@ -1,4 +1,9 @@
-import Link from "next/link";
-import { Users, Wallet, CreditCard, MessageCircle, ShieldCheck } from "lucide-react";
-const stats=[["총 회원","—",Users],["이번 달 결제","—",CreditCard],["포인트 잔액 합계","—",Wallet],["AI 상담 건수","—",MessageCircle]];
-export default function Admin(){return <main className="dashboard"><header className="dash-nav"><Link href="/" className="brand"><span className="brand-mark">天</span><span>천년지기 <b>관리자</b></span></Link><span className="admin-label"><ShieldCheck size={15}/> 관리자 전용 화면 시안</span></header><div className="dash-content"><div className="section-kicker">ADMIN CONSOLE</div><h1>운영 대시보드</h1><p className="muted">실제 관리자 권한과 데이터베이스 연결 전의 화면 설계입니다.</p><div className="dash-grid">{stats.map(([label,value,Icon])=><article className="dash-card" key={String(label)}><span>{String(label)}</span><strong>{String(value)}</strong><Icon size={19}/></article>)}</div><div className="admin-panel"><h2>관리 기능</h2><div className="admin-links"><span>회원 및 권한 관리</span><span>포인트 상품·차감 가격</span><span>토스 결제·환불 내역</span><span>AI 상담 및 사용 원가</span><span>공지·콘텐츠 관리</span><span>관리자 활동 감사 로그</span></div></div><p className="notice">주의: 이 페이지는 디자인 시안이며 실제 관리자 인증·권한 검사는 아직 구현되지 않았습니다. 배포 전 반드시 서버 측 관리자 보호를 적용해야 합니다.</p></div></main>}
+import Link from 'next/link';
+import {redirect} from 'next/navigation';
+import {createClient} from '@/lib/supabase-server';
+export const dynamic='force-dynamic';
+export default async function Admin(){
+ const supabase=await createClient();const {data:{user}}=await supabase.auth.getUser();
+ if(!user)redirect('/login');
+ return <main className="dashboard"><header className="dash-nav"><Link href="/" className="brand">天 <b>천년지기</b></Link></header><section className="dash-content"><h1>접근 권한이 없습니다</h1><p className="muted">관리자 기능은 서버 권한 정책과 감사 로그 구축 후 공개됩니다.</p><Link href="/mypage" className="button">마이페이지로 이동</Link></section></main>;
+}
