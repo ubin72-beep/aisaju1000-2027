@@ -26,7 +26,7 @@ export default function Home() {
         <p className="year">2027 · 丁未年</p>
         <h1>천년의 지혜,<br/><em>AI로 만나다.</em></h1>
         <p className="hero-desc">나의 타고난 기질을 이해하고, 삶의 흐름을 살펴보는 시간.<br/>정통 명리학의 지혜를 오늘의 AI 기술로 새롭게 경험하세요.</p>
-        <div className="hero-cta"><Link href="/signup" className="button">나의 사주 알아보기 <ArrowRight size={17}/></Link><a href="#services" className="text-link">서비스 둘러보기 <ChevronRight size={15}/></a></div>
+        <div className="hero-cta"><Link href="/consult" className="button">무료 AI 상담 시작하기 <ArrowRight size={17}/></Link><a href="#services" className="text-link">서비스 둘러보기 <ChevronRight size={15}/></a></div>
         <div className="trust"><ShieldCheck size={16}/> 내 사주 정보와 상담 기록을 안전하게 관리하는 개인 맞춤 서비스</div>
       </div>
       <div className="hero-art" aria-label="천체와 달을 표현한 장식 그래픽">
@@ -48,13 +48,13 @@ export default function Home() {
     </section>
 
     <section className="consult-band">
-      <div><div className="section-kicker">CONVERSATION WITH AI</div><h2>궁금한 것을 묻고,<br/><em>나만의 답을 찾아가세요.</em></h2><p>한 번 등록한 나의 사주 정보를 바탕으로<br/>상담을 이어가고 이전 대화를 다시 확인할 수 있습니다.</p><Link className="button" href="/signup">AI 상담 시작하기 <ArrowRight size={16}/></Link></div>
-      <div className="chat-preview"><div className="chat-head"><span className="online"/> 천년지기 AI 상담 <small>예시 대화</small></div><div className="bubble ai">안녕하세요. 오늘은 어떤 이야기가 궁금하신가요?</div><div className="bubble user">올해 제 일과 재물의 흐름이 궁금해요.</div><div className="bubble ai">등록하신 사주 정보를 바탕으로 차근차근 살펴볼게요.</div><div className="chat-foot">상담 종류와 차감 포인트를 먼저 확인할 수 있습니다.</div></div>
+      <div><div className="section-kicker">CONVERSATION WITH AI</div><h2>궁금한 것을 묻고,<br/><em>나만의 답을 찾아가세요.</em></h2><p>현재는 일반 명리학 개념을 쉽게 설명하는 무료 베타 상담입니다.<br/>질문 주제를 고르고 대화를 시작해 보세요. 개인 사주 계산은 준비 중입니다.</p><Link className="button" href="/consult">AI 상담 시작하기 <ArrowRight size={16}/></Link></div>
+      <div className="chat-preview"><div className="chat-head"><span className="online"/> 천년지기 AI 상담 <small>예시 대화</small></div><div className="bubble ai">안녕하세요. 오늘은 어떤 이야기가 궁금하신가요?</div><div className="bubble user">올해 제 일과 재물의 흐름이 궁금해요.</div><div className="bubble ai">현재는 개인 사주 분석 전 단계예요. 재물운의 명리학적 의미부터 쉽게 알려드릴게요.</div><div className="chat-foot">현재 무료 베타 상담은 포인트가 차감되지 않습니다.</div></div>
     </section>
 
     <section className="section points" id="points">
-      <div className="section-head"><div><div className="section-kicker">SIMPLE & TRANSPARENT</div><h2>필요한 만큼 충전하고,<br/><em>원하는 만큼 상담하세요.</em></h2></div><p className="muted">충전 포인트는 유효기간 없이<br/>원하는 상담에 사용할 수 있습니다.</p></div>
-      <div className="point-layout"><div className="point-main"><span className="point-label">CHEONNYEON POINT</span><div className="point-big">10,000 <small>P</small></div><p>10,000원 충전 시 10,000P 지급</p><div className="point-rule"/><div className="point-note"><ShieldCheck size={17}/> 상담 요청 전 차감 포인트를 안내합니다.</div><Link className="button" href="/signup">포인트 충전 시작하기 <ArrowRight size={16}/></Link></div>
+      <div className="section-head"><div><div className="section-kicker">SIMPLE & TRANSPARENT</div><h2>필요한 만큼 충전하고,<br/><em>원하는 만큼 상담하세요.</em></h2></div><p className="muted">아래 요금은 서비스 준비를 위한 예시입니다.<br/>현재 실제 충전 및 유료 결제는 지원하지 않습니다.</p></div>
+      <div className="point-layout"><div className="point-main"><span className="point-label">CHEONNYEON POINT</span><div className="point-big">10,000 <small>P</small></div><p>10,000원 충전 시 10,000P 지급</p><div className="point-rule"/><div className="point-note"><ShieldCheck size={17}/> 상담 요청 전 차감 포인트를 안내합니다.</div><Link className="button" href="/signup">서비스 준비 중 <ArrowRight size={16}/></Link></div>
       <div className="price-list"><h3>상담 유형별 포인트 안내 <span>예시 요금</span></h3>{prices.map(([name, price]) => <div className="price-row" key={name}><span>{name}</span><b>{price}</b></div>)}<p>* 최종 차감 가격은 서비스 오픈 전 확정됩니다.</p></div></div>
     </section>
 
