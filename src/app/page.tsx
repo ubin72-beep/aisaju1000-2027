@@ -36,6 +36,21 @@ export default function Home() {
       <div className="hero-bottom"><span>01 / YOUR PERSONAL JOURNEY</span><span>SCROLL TO EXPLORE ↓</span></div>
     </section>
 
+    <section className="quick-consult section" aria-labelledby="quick-consult-title">
+      <div className="section-kicker">START WITH YOUR QUESTION</div>
+      <h2 id="quick-consult-title">지금 가장 궁금한 것은 무엇인가요?</h2>
+      <p className="muted">주제를 선택하면 상담실에 질문이 미리 입력됩니다. 현재는 무료 명리학 개념 상담 베타입니다.</p>
+      <div className="quick-consult-grid">
+        {[
+          ['💕 연애·인간관계','명리학에서는 연애와 인간관계를 어떤 관점에서 이해하나요?'],
+          ['💼 직업·적성','명리학에서 직업과 적성을 살펴볼 때 어떤 개념을 참고하나요?'],
+          ['💰 재물·생활','명리학에서 재물운의 의미와 현실적인 재정 판단의 차이를 설명해 주세요.'],
+          ['🌿 오행·성격','오행과 성격의 관계를 초보자도 이해하기 쉽게 설명해 주세요.']
+        ].map(([title,question])=><Link className="quick-consult-link" key={title} href={'/consult?q='+encodeURIComponent(question)}>{title}<ArrowRight size={18}/></Link>)}
+      </div>
+      <Link className="text-link" href="/consult">직접 질문 작성하기 <ChevronRight size={16}/></Link>
+    </section>
+
     <section className="intro section" id="about">
       <div className="section-kicker">A NEW WAY TO READ YOUR STORY</div>
       <h2>운명을 단정하기보다,<br/><em>나를 이해하는 지혜.</em></h2>
