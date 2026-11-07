@@ -9,7 +9,9 @@ function validBirthDate(value:string){
  if(year<1900||year>new Date().getFullYear()||month<1||month>12)return false;
  const maxDay=new Date(Date.UTC(year,month,0)).getUTCDate();
  if(day<1||day>maxDay)return false;
- const today=new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Seoul'});
+ const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+ const part=(type:string)=>parts.find(p=>p.type===type)?.value||'';
+ const today=part('year')+'-'+part('month')+'-'+part('day');
  return value<=today;
 }
 export async function saveBirth(form:FormData){
