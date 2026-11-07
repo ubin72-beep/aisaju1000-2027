@@ -9,8 +9,8 @@ const topics=[
  {title:'자유 질문',question:''}
 ];
 type Entry={id:string;question:string;answer:string;created_at:string};
-export default function Consultation({initial}:{initial:Entry[]}){
- const [items,setItems]=useState(initial),[question,setQuestion]=useState(''),[busy,setBusy]=useState(false),[deleting,setDeleting]=useState(false),[error,setError]=useState('');
+export default function Consultation({initial,initialQuestion=''}:{initial:Entry[];initialQuestion?:string}){
+ const [items,setItems]=useState(initial),[question,setQuestion]=useState(initialQuestion),[busy,setBusy]=useState(false),[deleting,setDeleting]=useState(false),[error,setError]=useState('');
  async function submit(e:React.FormEvent<HTMLFormElement>){e.preventDefault();if(!question.trim()||busy)return;setBusy(true);setError('');
  try{const res=await fetch('/api/consult',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question})});const json=await res.json();if(!res.ok)throw new Error(json.error||'상담에 실패했습니다.');setItems(v=>[json.entry,...v]);setQuestion('');}catch(e){setError(e instanceof Error?e.message:'오류가 발생했습니다.');}finally{setBusy(false);}
  }
