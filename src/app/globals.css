@@ -38,3 +38,16 @@ footer{padding:40px clamp(22px,6vw,92px);border-top:1px solid #243145;display:gr
 .consult-app{max-width:850px;margin-top:35px}.consult-form{padding:26px;background:#142238;border:1px solid var(--line);display:grid;gap:15px}.consult-form label{font-size:13px;color:#d8c8a8}.consult-form textarea{width:100%;padding:15px;resize:vertical;background:#0b1421;color:#f3eddf;border:1px solid #43506a;font:inherit;line-height:1.6}.consult-form-bottom{display:flex;justify-content:space-between;align-items:center;gap:15px}.consult-form-bottom span{font-size:11px;color:#9ba7b8}.consult-app h2{font-size:21px;font-weight:500;margin-top:42px}.consult-entry{padding:24px;margin:16px 0;border:1px solid var(--line);background:#142238}.consult-entry time{font-size:11px;color:#bca476}.consult-entry h3{font-size:16px;margin:15px 0}.consult-entry p{font-size:13px;color:#c6cfda;line-height:1.9;white-space:pre-wrap}@media(max-width:600px){.consult-form{padding:18px}.consult-form-bottom{align-items:stretch;flex-direction:column}}
 
 .consult-history-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:32px}.consult-history-head h2{margin:0}.consult-history-head button:disabled{opacity:.6;cursor:wait}
+
+/* Guided consultation: large, accessible topic targets */
+.consult-topics{margin:24px 0 26px}
+.consult-topics h2{font-size:clamp(22px,3vw,30px);margin:0 0 8px}
+.consult-topics .muted{margin:0 0 20px;line-height:1.7}
+.consult-topic-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.consult-topic{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:18px 20px;background:#17263a;border:1px solid rgba(200,169,107,.36);border-radius:12px;color:#f6f1e7;font:inherit;font-size:16px;font-weight:600;text-align:left;transition:background .2s,border-color .2s}
+.consult-topic span{color:#d8bd82}
+.consult-topic:hover,.consult-topic:focus-visible{background:#263750;border-color:#d8bd82}
+.consult-topic:focus-visible{outline:3px solid #d8bd82;outline-offset:3px}
+.consult-topic:disabled{opacity:.5;cursor:wait}
+@media(max-width:760px){.consult-topic-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.consult-topic{min-height:72px;padding:15px;font-size:15px}}
+@media(max-width:420px){.consult-topic-grid{grid-template-columns:1fr}.consult-topic{min-height:58px}}
