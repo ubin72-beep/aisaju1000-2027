@@ -21,11 +21,24 @@ export async function POST(request:Request){
  const key=process.env.OPENAI_API_KEY,serviceKey=process.env.SUPABASE_SERVICE_ROLE_KEY,url=process.env.NEXT_PUBLIC_SUPABASE_URL;
  if(!key||!serviceKey||!url)return NextResponse.json({error:'상담 서비스 설정 중입니다.'},{status:503});
  const admin=createAdminClient(url,serviceKey,{auth:{persistSession:false,autoRefreshToken:false}});
+ const walletEnabled=process.env.WALLET_CHARGING_ENABLED==='true';
+ const chargeReference='consult_'+crypto.randomUUID();
+ let charged=false;
  // The database RPC atomically claims one daily slot, preventing parallel bypass.
  const {data:allowed,error:limitError}=await admin.rpc('claim_consultation_slot',{p_user_id:user.id});
  if(limitError)return NextResponse.json({error:'상담 이용 제한 설정이 필요합니다.'},{status:503});
  if(!allowed)return NextResponse.json({error:'오늘의 무료 베타 상담 3회를 모두 사용했습니다.'},{status:429});
  try{
+  if(walletEnabled){
+   const {error:chargeError}=await admin.rpc('wallet_apply',{
+    p_user_id:user.id,p_amount:-100,p_kind:'consult',p_reference:chargeReference
+   });
+   if(chargeError){
+    await admin.rpc('release_consultation_slot',{p_user_id:user.id});
+    return NextResponse.json({error:'상담에 필요한 100포인트가 부족하거나 포인트 처리에 실패했습니다. 충전 상태를 확인해 주세요.'},{status:402});
+   }
+   charged=true;
+  }
   const response=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+key},body:JSON.stringify({model:process.env.OPENAI_MODEL||'gpt-4o-mini',messages:[{role:'system',content:systemPrompt},...previous,{role:'user',content:question}],max_tokens:650,temperature:0.6}),signal:AbortSignal.timeout(25000)});
   if(!response.ok)throw new Error('AI provider error');
   const data=await response.json();const answer=data?.choices?.[0]?.message?.content;
@@ -34,6 +47,12 @@ export async function POST(request:Request){
   if(error||!entry)throw new Error('Failed to save consultation');
   return NextResponse.json({entry});
  }catch{
+  if(charged){
+   const {error:refundError}=await admin.rpc('wallet_apply',{
+    p_user_id:user.id,p_amount:100,p_kind:'refund',p_reference:'refund_'+chargeReference
+   });
+   if(refundError)return NextResponse.json({error:'상담 오류 후 포인트 복구 확인이 필요합니다. 고객센터에 문의해 주세요.'},{status:503});
+  }
   await admin.rpc('release_consultation_slot',{p_user_id:user.id});
   return NextResponse.json({error:'상담 처리에 실패했습니다. 잠시 후 다시 시도해 주세요.'},{status:502});
  }
