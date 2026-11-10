@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase-server';
 function validBirthDate(value:string,calendar:'solar'|'lunar'){
  if(!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;
  const [year,month,day]=value.split('-').map(Number);
- if(year<1900||year>new Date().getFullYear()||month<1||month>12)return false;
+ if(year<1900||month<1||month>12)return false;
  // Lunar months can have 29 or 30 days regardless of Gregorian month length.
  // Full lunar month/leap-month validation awaits a verified calendar source.
  const maxDay=calendar==='lunar'?30:new Date(Date.UTC(year,month,0)).getUTCDate();
