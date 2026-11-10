@@ -30,7 +30,7 @@ export async function POST(request:Request) {
  const {data:order,error:lookupError}=await admin.from('payment_orders')
   .select('order_id,user_id,amount,status').eq('order_id',orderId).eq('user_id',user.id).maybeSingle();
  if(lookupError||!order)return NextResponse.json({error:'주문을 찾을 수 없습니다.'},{status:404});
- if(order.status==='paid')return NextResponse.json({error:'이미 처리된 주문입니다.'},{status:409});
+ if(order.status==='paid')return NextResponse.json({error:'이미 승인된 주문입니다. 포인트 내역을 확인해 주세요.'},{status:409});
  if(order.status!=='pending'||order.amount!==amount)
   return NextResponse.json({error:'주문 상태 또는 결제 금액이 일치하지 않습니다.'},{status:409});
  // Claim once to avoid concurrent confirmations. A timeout is marked for manual review,
@@ -56,7 +56,9 @@ export async function POST(request:Request) {
    status:'paid',payment_key:paymentKey,paid_at:new Date().toISOString()
   }).eq('order_id',orderId).eq('status','confirming').select('order_id').maybeSingle();
   if(saveError||!saved)return NextResponse.json({error:'결제 승인 후 기록 확인이 필요합니다. 재결제하지 마세요.'},{status:503});
-  return NextResponse.json({status:'paid',orderId});
+  const {error:creditError}=await admin.rpc('wallet_credit_paid_order',{p_order_id:orderId});
+  if(creditError)return NextResponse.json({error:'결제는 승인되었지만 포인트 지급 확인이 필요합니다. 재결제하지 마세요.'},{status:503});
+  return NextResponse.json({status:'paid',orderId,credited:true});
  }catch {
   await admin.from('payment_orders').update({status:'review'}).eq('order_id',orderId).eq('status','confirming');
   return NextResponse.json({error:'결제 결과 확인이 필요합니다. 재결제하지 마세요.'},{status:503});
