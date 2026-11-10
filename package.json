@@ -2,7 +2,7 @@
   "name": "aisaju1000-2027",
   "version": "0.1.0",
   "private": true,
-  "scripts": {"dev":"next dev","build":"next build","start":"next start","lint":"eslint .","test:birth":"node scripts/test-birth-date.cjs"},
+  "scripts": {"dev":"next dev","build":"next build","start":"next start","lint":"eslint .","test:birth":"node scripts/test-birth-date.cjs","test:kasi":"node scripts/test-kasi-lunar.cjs"},
   "dependencies": {
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.49.1",
