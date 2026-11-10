@@ -1,0 +1,25 @@
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const vm=require('node:vm');
+const ts=require('typescript');
+const file=path.join(__dirname,'../src/lib/kasi-lunar.ts');
+const js=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2020}}).outputText;
+const mod={exports:{}};
+vm.runInNewContext(js,{module:mod,exports:mod.exports,require(name){
+ if(name==='./birth-date-validation')return {validateBirthDate:(value)=>({valid:/^\d{4}-\d{2}-(0[1-9]|[12]\d|30)$/.test(value)})};
+ throw Error('unexpected dependency '+name);
+}}, {filename:file});
+const parse=mod.exports.parseKasiLunarDay;
+const item='<solYear>2024</solYear><solMonth>02</solMonth><solDay>10</solDay><lunYear>2024</lunYear><lunMonth>01</lunMonth><lunDay>01</lunDay><lunLeapmonth>평</lunLeapmonth><lunNday>29</lunNday>';
+const xml=(body,code='00')=>'<response><header><resultCode>'+code+'</resultCode></header><body><items><item>'+body+'</item></items></body></response>';
+const ok=parse(xml(item),'2024-02-10');
+assert.equal(ok.solarDate,'2024-02-10');
+assert.equal(ok.lunarDate,'2024-01-01');
+assert.equal(ok.isLeapMonth,false);
+assert.equal(parse(xml(item),'2024-02-11'),null);
+assert.equal(parse(xml(item,'20'),'2024-02-10'),null);
+assert.equal(parse(xml(item.replace('<lunNday>29','<lunNday>31')),'2024-02-10'),null);
+assert.equal(parse(xml(item.replace('<lunDay>01','<lunDay>30')),'2024-02-10'),null);
+assert.equal(parse('<response/>','2024-02-10'),null);
+console.log('KASI XML parser: 6 checks passed (fixture only; no live API verification).');
