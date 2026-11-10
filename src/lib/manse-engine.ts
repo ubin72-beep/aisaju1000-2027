@@ -30,7 +30,7 @@ export function calculateManse(input:BirthInput):ManseResult {
  if(input.timeZone!=='Asia/Seoul')return {status:'invalid_input',reason:'time_zone'};
  if(input.isLeapMonth&&input.calendarType!=='lunar')
   return {status:'invalid_input',reason:'leap_requires_lunar'};
- if(input.birthTime!==null&&!/^([01]\\d|2[0-3]):[0-5]\\d$/.test(input.birthTime))
+ if(input.birthTime!==null&&!/^([01]\d|2[0-3]):[0-5]\d$/.test(input.birthTime))
   return {status:'invalid_input',reason:'time'};
  const date=validateBirthDate(input.birthDate,input.calendarType);
  if(!date.valid)return {status:'invalid_input',reason:date.reason};
