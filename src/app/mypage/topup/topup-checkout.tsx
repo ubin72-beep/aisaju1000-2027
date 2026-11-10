@@ -1,6 +1,6 @@
 'use client';
 import Script from 'next/script';
-import {useState} from 'react';
+import {useRef,useState} from 'react';
 import {TOPUP_PRODUCTS,type TopupProductId} from '@/lib/topup-products';
 
 type PaymentWidget={setAmount:(amount:{currency:'KRW';value:number})=>Promise<void>;renderPaymentMethods:(input:{selector:string})=>Promise<unknown>;renderAgreement:(input:{selector:string})=>Promise<unknown>;requestPayment:(input:{orderId:string;orderName:string;successUrl:string;failUrl:string})=>Promise<void>};
@@ -14,6 +14,7 @@ export default function TopupCheckout({enabled,clientKey}:{enabled:boolean;clien
  const [sdkReady,setSdkReady]=useState(false);
  const [widget,setWidget]=useState<PaymentWidget|null>(null);
  const [ready,setReady]=useState(false);
+ const changing=useRef(false);
  async function initialize(){
   if(!enabled||!window.TossPayments||widget)return;
   setBusy(true);setError('');
@@ -28,12 +29,16 @@ export default function TopupCheckout({enabled,clientKey}:{enabled:boolean;clien
   finally{setBusy(false);}
  }
  async function choose(id:TopupProductId){
-  if(busy)return;
+  if(busy||changing.current)return;
+  changing.current=true;
+  setReady(false);
   setSelected(id);setError('');
-  if(widget){setReady(false);try{await widget.setAmount({currency:'KRW',value:TOPUP_PRODUCTS[id].amount});setReady(true);}catch{setError('금액 변경에 실패했습니다. 페이지를 새로고침해 주세요.');}}
+  try{if(widget){await widget.setAmount({currency:'KRW',value:TOPUP_PRODUCTS[id].amount});setReady(true);}}
+  catch{setError('금액 변경에 실패했습니다. 페이지를 새로고침해 주세요.');}
+  finally{changing.current=false;}
  }
  async function pay(){
-  if(!widget||!ready||busy)return;
+  if(!widget||!ready||busy||changing.current)return;
   setBusy(true);setError('');
   try{
    const response=await fetch('/api/payments/toss/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({productId:selected})});
