@@ -13,6 +13,8 @@ jobs:
         with:
           node-version: '20'
       - run: npm install --no-audit --no-fund
+      - name: Birth date regression tests
+        run: npm run test:birth
       - name: Typecheck
         run: npx tsc --noEmit
       - name: Production build
