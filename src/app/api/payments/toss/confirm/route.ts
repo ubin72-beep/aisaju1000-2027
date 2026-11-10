@@ -52,10 +52,10 @@ export async function POST(request:Request) {
    await admin.from('payment_orders').update({status:'review'}).eq('order_id',orderId).eq('status','confirming');
    return NextResponse.json({error:'결제 상태를 확인해야 합니다. 재결제하지 말고 운영자에게 문의해 주세요.'},{status:502});
   }
-  const {error:saveError}=await admin.from('payment_orders').update({
+  const {data:saved,error:saveError}=await admin.from('payment_orders').update({
    status:'paid',payment_key:paymentKey,paid_at:new Date().toISOString()
-  }).eq('order_id',orderId).eq('status','confirming');
-  if(saveError)return NextResponse.json({error:'결제 승인 후 기록 확인이 필요합니다. 재결제하지 마세요.'},{status:503});
+  }).eq('order_id',orderId).eq('status','confirming').select('order_id').maybeSingle();
+  if(saveError||!saved)return NextResponse.json({error:'결제 승인 후 기록 확인이 필요합니다. 재결제하지 마세요.'},{status:503});
   return NextResponse.json({status:'paid',orderId});
  }catch {
   await admin.from('payment_orders').update({status:'review'}).eq('order_id',orderId).eq('status','confirming');
