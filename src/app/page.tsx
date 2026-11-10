@@ -2,14 +2,10 @@ import Link from "next/link";
 import { ArrowRight, Sparkles, Compass, MoonStar, Gem, ShieldCheck, MessageCircle, Wallet, ChevronRight } from "lucide-react";
 
 const services = [
-  { icon: Compass, title: "나의 사주 분석", desc: "타고난 기질과 오행의 균형을 깊이 있게 살펴봅니다.", tag: "처음 이용하는 분" },
-  { icon: MessageCircle, title: "AI 명리 상담", desc: "궁금한 순간, 나의 사주를 바탕으로 이어지는 대화.", tag: "대화형 상담" },
-  { icon: MoonStar, title: "2027 신년운세", desc: "정미년의 흐름과 월별 변화를 차분하게 읽어봅니다.", tag: "2027 특별 분석" },
-  { icon: Gem, title: "궁합·관계 분석", desc: "서로 다른 기질을 이해하고 관계의 방향을 살펴봅니다.", tag: "관계와 소통" }
-];
-const prices = [
-  ["오늘의 운세", "100P"], ["간단한 사주 질문", "200P"], ["성격·기질 분석", "300P"],
-  ["재물·직업·애정운", "500P"], ["궁합 심층 분석", "800P"], ["대운·세운 분석", "1,000P"], ["종합 사주 분석", "1,500P"]
+  { icon: Compass, title: "나의 사주 분석", desc: "개인 사주 계산은 검증을 거쳐 제공할 예정입니다.", tag: "처음 이용하는 분" },
+  { icon: MessageCircle, title: "AI 명리 상담", desc: "궁금한 순간, 명리학의 개념으로 이어가는 대화.", tag: "대화형 상담" },
+  { icon: MoonStar, title: "2027 신년운세", desc: "2027 신년운세 분석 기능을 준비하고 있습니다.", tag: "2027 특별 분석" },
+  { icon: Gem, title: "궁합·관계 분석", desc: "관계 분석 기능을 준비하고 있습니다.", tag: "관계와 소통" }
 ];
 export default function Home() {
   return <main>
@@ -19,21 +15,30 @@ export default function Home() {
       <div className="nav-actions"><Link className="login" href="/login">로그인</Link><Link className="button button-small" href="/signup">무료로 시작하기 <ArrowRight size={15}/></Link></div>
     </header>
 
-    <section className="hero">
+    <section className="hero hero-premium">
       <div className="hero-orbit orbit-one"/><div className="hero-orbit orbit-two"/>
+      <div className="hero-art" aria-hidden="true"><div className="sun-glow"/><div className="planet"/><div className="moon"/><div className="star s1">✦</div><div className="star s2">✧</div><div className="star s3">✦</div></div>
       <div className="hero-copy">
-        <div className="eyebrow"><span/> THE WISDOM OF EASTERN PHILOSOPHY</div>
-        <p className="year">2027 · 丁未年</p>
-        <h1>천년의 지혜,<br/><em>AI로 만나다.</em></h1>
-        <p className="hero-desc">나의 타고난 기질을 이해하고, 삶의 흐름을 살펴보는 시간.<br/>정통 명리학의 지혜를 오늘의 AI 기술로 새롭게 경험하세요.</p>
-        <div className="hero-cta"><Link href="/consult" className="button">무료 AI 상담 시작하기 <ArrowRight size={17}/></Link><a href="#services" className="text-link">서비스 둘러보기 <ChevronRight size={15}/></a></div>
-        <div className="trust"><ShieldCheck size={16}/> 내 사주 정보와 상담 기록을 안전하게 관리하는 개인 맞춤 서비스</div>
+        <div className="hero-pill"><Sparkles size={13}/> AI 사주 천년지기 · 2027</div>
+        <p className="year">천년의 지혜를 오늘의 질문으로</p>
+        <h1>지금 이 순간,<br/><em>당신이 가장 궁금한 것</em>을<br/>물어보세요.</h1>
+        <p className="hero-desc">관계, 일, 재물, 나의 성향까지.<br/>오래된 명리의 언어로 오늘의 고민을 함께 살펴봅니다.</p>
+        <form className="hero-question" action="/consult" method="get">
+          <label htmlFor="hero-question-input" className="sr-only">AI 상담 질문</label>
+          <input id="hero-question-input" name="q" maxLength={1000} placeholder="예: 새로운 일을 시작할 때 무엇을 살펴봐야 할까요?" required/>
+          <button type="submit"><MessageCircle size={17}/> 지금 상담</button>
+        </form>
+        <div className="hero-chips">
+          {[
+            ['♡ 연애·관계','명리학에서는 연애와 관계를 어떻게 바라보나요?'],
+            ['✧ 직업·적성','명리학에서 적성과 직업은 어떻게 해석하나요?'],
+            ['◈ 재물·생활','재물운의 명리학적 의미를 알려주세요.'],
+            ['☾ 오행·성격','오행과 성격의 관계를 쉽게 설명해 주세요.']
+          ].map(([label,question])=><Link key={label} href={'/consult?q='+encodeURIComponent(question)}>{label}</Link>)}
+        </div>
+        <p className="hero-honesty"><ShieldCheck size={14}/> 현재 무료 베타 · 개인 명식 계산 준비 중 · 실제 결제 없음</p>
       </div>
-      <div className="hero-art" aria-label="천체와 달을 표현한 장식 그래픽">
-        <div className="sun-glow"/><div className="planet"/><div className="moon"/><div className="star s1">✦</div><div className="star s2">✧</div><div className="star s3">✦</div>
-        <div className="art-caption"><span>陰陽 · 五行 · 命理</span><b>나를 이해하는 새로운 시선</b></div>
-      </div>
-      <div className="hero-bottom"><span>01 / YOUR PERSONAL JOURNEY</span><span>SCROLL TO EXPLORE ↓</span></div>
+      <div className="hero-bottom"><span>CHEONNYEON JIGI · AI CONSULTATION</span><span>DISCOVER YOUR OWN STORY</span></div>
     </section>
 
     <section className="quick-consult section" aria-labelledby="quick-consult-title">
@@ -68,9 +73,11 @@ export default function Home() {
     </section>
 
     <section className="section points" id="points">
-      <div className="section-head"><div><div className="section-kicker">SIMPLE & TRANSPARENT</div><h2>필요한 만큼 충전하고,<br/><em>원하는 만큼 상담하세요.</em></h2></div><p className="muted">아래 요금은 서비스 준비를 위한 예시입니다.<br/>현재 실제 충전 및 유료 결제는 지원하지 않습니다.</p></div>
-      <div className="point-layout"><div className="point-main"><span className="point-label">CHEONNYEON POINT</span><div className="point-big">10,000 <small>P</small></div><p>10,000원 충전 시 10,000P 지급</p><div className="point-rule"/><div className="point-note"><ShieldCheck size={17}/> 상담 요청 전 차감 포인트를 안내합니다.</div><Link className="button" href="/signup">서비스 준비 중 <ArrowRight size={16}/></Link></div>
-      <div className="price-list"><h3>상담 유형별 포인트 안내 <span>예시 요금</span></h3>{prices.map(([name, price]) => <div className="price-row" key={name}><span>{name}</span><b>{price}</b></div>)}<p>* 최종 차감 가격은 서비스 오픈 전 확정됩니다.</p></div></div>
+      <div className="section-head"><div><div className="section-kicker">SIMPLE & TRANSPARENT</div><h2>필요한 만큼 충전하고,<br/><em>한 질문에 100포인트.</em></h2></div><p className="muted">1P = 1원 · 충전식 포인트 정책 확정<br/>현재는 무료 베타이며 실제 유료 결제는 준비 중입니다.</p></div>
+      <div className="premium-price-grid">
+        {[1000,3000,5000,10000].map(amount=><article className="premium-price-card" key={amount}><span>POINT TOP-UP</span><strong>{amount.toLocaleString('ko-KR')}<small> P</small></strong><p>{amount.toLocaleString('ko-KR')}원 · 상담 {amount/100}건 상당</p></article>)}
+      </div>
+      <div className="premium-price-foot"><span><ShieldCheck size={17}/> 상담 답변 1건당 100P 차감 예정</span><Link href="/mypage/topup">충전 상품 살펴보기 <ArrowRight size={16}/></Link></div>
     </section>
 
     <section className="closing"><Sparkles size={22}/><div className="section-kicker">BEGIN YOUR JOURNEY</div><h2>나를 알아가는 여정,<br/><em>천년지기와 함께.</em></h2><Link href="/signup" className="button">무료 회원가입 <ArrowRight size={16}/></Link></section>
