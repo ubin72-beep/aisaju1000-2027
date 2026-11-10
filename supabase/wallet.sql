@@ -50,3 +50,25 @@ begin
 end;$$;
 revoke all on function public.wallet_apply(uuid,integer,text,text) from public,anon,authenticated;
 grant execute on function public.wallet_apply(uuid,integer,text,text) to service_role;
+
+-- Atomically credit only a confirmed paid order, once. Recovery can safely retry.
+create or replace function public.wallet_credit_paid_order(p_order_id text)
+returns integer language plpgsql security definer set search_path = '' as $$
+declare v_order public.payment_orders%rowtype; v_balance integer;
+begin
+ select * into v_order from public.payment_orders where order_id=p_order_id for update;
+ if not found or v_order.status<>'paid' or v_order.payment_key is null
+ then raise exception 'order not paid'; end if;
+ if v_order.product_code<>'wallet_topup' or v_order.amount<=0
+ then raise exception 'not a wallet topup'; end if;
+ if exists(select 1 from public.wallet_ledger where reference='topup_'||p_order_id)
+ then
+  select balance into v_balance from public.wallets where user_id=v_order.user_id;
+  return v_balance;
+ end if;
+ select public.wallet_apply(v_order.user_id,v_order.amount,'topup','topup_'||p_order_id)
+ into v_balance;
+ return v_balance;
+end;$$;
+revoke all on function public.wallet_credit_paid_order(text) from public,anon,authenticated;
+grant execute on function public.wallet_credit_paid_order(text) to service_role;
